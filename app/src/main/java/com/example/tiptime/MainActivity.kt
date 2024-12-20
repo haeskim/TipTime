@@ -23,6 +23,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
@@ -32,6 +33,10 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -72,6 +77,7 @@ fun TipTimeLayout() {
                 .padding(bottom = 16.dp, top = 40.dp)
                 .align(alignment = Alignment.Start)
         )
+        EditNumberField(modifier = Modifier.padding(bottom = 32.dp).fillMaxWidth())
         Text(
             text = stringResource(R.string.tip_amount, "$0.00"),
             style = MaterialTheme.typography.displaySmall
@@ -90,11 +96,21 @@ private fun calculateTip(amount: Double, tipPercent: Double = 15.0): String {
     return NumberFormat.getCurrencyInstance().format(tip)
 }
 
+/**
+ * Compose는 처음 composable을 실행할 때 composition을 생성한다
+ * 상태가 변경되면 composition이 업데이트 되는데 이를 recomposition이라 한다
+ * compose가 추적할 상태(state)를 알아야 업데이트 될 때 recomposition을 예약할 수 있다
+ * State, MutableState 유형을 사용해 앱의 상태를 compose가 관찰,추적 가능한 상태로 설정할 수 있다
+ * State 유형은 변경할 수 없다(Read only) -> StateOf()
+ * MutableState 유형은 변경할 수 있다 -> mutableStateOf()
+ * 이 함수는 초깃값을 State 객체에 래핑된 매개변수로 수신한 다음, value의 값을 관찰 가능한 상태로 만든다
+ */
 @Composable
 fun EditNumberField(modifier: Modifier = Modifier) {
-    TextField(
-        value = "",
-        onValueChange= {},
+    var amountInput by remember { mutableStateOf("")}//청구 금액에 관한 앱의 상태
+    TextField(//import androidx.compose.material3.TextField
+        value = amountInput,//여기에서 전달하는 문자열 값을 표시하는 텍스트 상자
+        onValueChange= { amountInput = it },//사용자가 상자에 텍스트를 입력할 때 트리거되는 람다 콜백
         modifier = modifier
     )
 }
