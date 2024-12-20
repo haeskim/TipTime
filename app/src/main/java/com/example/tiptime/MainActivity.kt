@@ -28,6 +28,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -40,6 +41,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.tiptime.ui.theme.TipTimeTheme
@@ -108,9 +110,13 @@ private fun calculateTip(amount: Double, tipPercent: Double = 15.0): String {
 @Composable
 fun EditNumberField(modifier: Modifier = Modifier) {
     var amountInput by remember { mutableStateOf("")}//청구 금액에 관한 앱의 상태
+
     TextField(//import androidx.compose.material3.TextField
         value = amountInput,//여기에서 전달하는 문자열 값을 표시하는 텍스트 상자
         onValueChange= { amountInput = it },//사용자가 상자에 텍스트를 입력할 때 트리거되는 람다 콜백
+        label = { Text(stringResource(R.string.bill_amount)) },//텍스트 입력란에 라벨을 추가한다
+        singleLine = true,//텍스트 상자가 여러 줄에서 가로로 스크롤 가능한 하나의 줄로 압축된다
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),//화면에 표시되는 키보드를 구성한다, 숫자 유형 키보드
         modifier = modifier
     )
 }
