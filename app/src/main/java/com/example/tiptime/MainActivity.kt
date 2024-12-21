@@ -42,6 +42,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -89,6 +90,10 @@ fun TipTimeLayout() {
         )
         EditNumberField(
             label = R.string.bill_amount,//EditNumberField를 재사용하기 위해 label을 매개변수로 준다
+            keyboardOptions = KeyboardOptions.Default.copy(
+                keyboardType = KeyboardType.Number,
+                imeAction = ImeAction.Next
+            ),
             value = amountInput,
             onValueChange = { amountInput = it },
             modifier = Modifier
@@ -97,6 +102,10 @@ fun TipTimeLayout() {
         )
         EditNumberField(
             label = R.string.how_was_the_service,
+            keyboardOptions = KeyboardOptions.Default.copy(
+                keyboardType = KeyboardType.Number,
+                imeAction = ImeAction.Done
+            ),
             value = tipInput,
             onValueChange = { tipInput = it },
             modifier = Modifier
@@ -133,6 +142,7 @@ private fun calculateTip(amount: Double, tipPercent: Double = 15.0): String {
 @Composable
 fun EditNumberField(
     @StringRes label: Int,//매개변수가 문자열 리소스 참조여아 함을 나타내기 위한 주석
+    keyboardOptions: KeyboardOptions,
     value: String,//표시할 현재 값
     onValueChange: (String) -> Unit,//사용자가 텍스트를 입력하는 경우 등 값이 변경될 때 상태가 업데이트될 수 있도록 트리거되는 콜백 람다
     modifier: Modifier = Modifier) {
@@ -142,7 +152,14 @@ fun EditNumberField(
         onValueChange = onValueChange,//사용자가 상자에 텍스트를 입력할 때 트리거되는 람다 콜백
         label = { Text(stringResource(label)) },//텍스트 입력란에 라벨을 추가한다
         singleLine = true,//텍스트 상자가 여러 줄에서 가로로 스크롤 가능한 하나의 줄로 압축된다
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),//화면에 표시되는 키보드를 구성한다, 숫자 유형 키보드
+        keyboardOptions = keyboardOptions,
+        /**
+         * ImeAction.Search -> 돋보기, 검색을 실행하려고 할 때 사용
+         * ImeAction.Send -> 비행기, 입력란의 텍스트를 보내려고 할 때 사용
+         * ImeAction.Go -> 화살표(->), 입력한 텍스트 대상으로 이동하려고 할 때 사용
+         * ImeAction.Next -> 화살표(->|), 다음으로 이동하려고 할 때 사용
+         * ImeAction.Done -> 체크, 완료
+         */
         modifier = modifier
     )
 }
