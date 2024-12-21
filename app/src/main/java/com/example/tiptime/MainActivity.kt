@@ -67,9 +67,11 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun TipTimeLayout() {
     var amountInput by remember { mutableStateOf("")}//청구 금액에 관한 앱의 상태
+    var tipInput by remember { mutableStateOf("") }
 
+    val tipPercent = tipInput.toDoubleOrNull() ?: 0.0
     val amount = amountInput.toDoubleOrNull() ?: 0.0//문자열을 double 숫자로 파싱한 결과 또는 null을 반환
-    val tip = calculateTip(amount)
+    val tip = calculateTip(amount, tipPercent)
 
     Column(
         modifier = Modifier
@@ -89,6 +91,14 @@ fun TipTimeLayout() {
             label = R.string.bill_amount,//EditNumberField를 재사용하기 위해 label을 매개변수로 준다
             value = amountInput,
             onValueChange = { amountInput = it },
+            modifier = Modifier
+                .padding(bottom = 32.dp)
+                .fillMaxWidth()
+        )
+        EditNumberField(
+            label = R.string.how_was_the_service,
+            value = tipInput,
+            onValueChange = { tipInput = it },
             modifier = Modifier
                 .padding(bottom = 32.dp)
                 .fillMaxWidth()
