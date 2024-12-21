@@ -19,6 +19,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -85,11 +86,12 @@ fun TipTimeLayout() {
                 .align(alignment = Alignment.Start)
         )
         EditNumberField(
+            label = R.string.bill_amount,//EditNumberField를 재사용하기 위해 label을 매개변수로 준다
             value = amountInput,
             onValueChange = { amountInput = it },
             modifier = Modifier
-                .padding(bottom = 32.dp).
-                fillMaxWidth()
+                .padding(bottom = 32.dp)
+                .fillMaxWidth()
         )
         Text(
             text = stringResource(R.string.tip_amount, tip),
@@ -120,6 +122,7 @@ private fun calculateTip(amount: Double, tipPercent: Double = 15.0): String {
  */
 @Composable
 fun EditNumberField(
+    @StringRes label: Int,//매개변수가 문자열 리소스 참조여아 함을 나타내기 위한 주석
     value: String,//표시할 현재 값
     onValueChange: (String) -> Unit,//사용자가 텍스트를 입력하는 경우 등 값이 변경될 때 상태가 업데이트될 수 있도록 트리거되는 콜백 람다
     modifier: Modifier = Modifier) {
@@ -127,7 +130,7 @@ fun EditNumberField(
     TextField(//import androidx.compose.material3.TextField
         value = value,//여기에서 전달하는 문자열 값을 표시하는 텍스트 상자
         onValueChange = onValueChange,//사용자가 상자에 텍스트를 입력할 때 트리거되는 람다 콜백
-        label = { Text(stringResource(R.string.bill_amount)) },//텍스트 입력란에 라벨을 추가한다
+        label = { Text(stringResource(label)) },//텍스트 입력란에 라벨을 추가한다
         singleLine = true,//텍스트 상자가 여러 줄에서 가로로 스크롤 가능한 하나의 줄로 압축된다
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),//화면에 표시되는 키보드를 구성한다, 숫자 유형 키보드
         modifier = modifier
