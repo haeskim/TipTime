@@ -65,6 +65,11 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun TipTimeLayout() {
+    var amountInput by remember { mutableStateOf("")}//청구 금액에 관한 앱의 상태
+
+    val amount = amountInput.toDoubleOrNull() ?: 0.0//문자열을 double 숫자로 파싱한 결과 또는 null을 반환
+    val tip = calculateTip(amount)
+
     Column(
         modifier = Modifier
             .statusBarsPadding()
@@ -79,9 +84,15 @@ fun TipTimeLayout() {
                 .padding(bottom = 16.dp, top = 40.dp)
                 .align(alignment = Alignment.Start)
         )
-        EditNumberField(modifier = Modifier.padding(bottom = 32.dp).fillMaxWidth())
+        EditNumberField(
+            value = amountInput,
+            onValueChange = { amountInput = it },
+            modifier = Modifier
+                .padding(bottom = 32.dp).
+                fillMaxWidth()
+        )
         Text(
-            text = stringResource(R.string.tip_amount, "$0.00"),
+            text = stringResource(R.string.tip_amount, amount),
             style = MaterialTheme.typography.displaySmall
         )
         Spacer(modifier = Modifier.height(150.dp))
@@ -108,12 +119,14 @@ private fun calculateTip(amount: Double, tipPercent: Double = 15.0): String {
  * 이 함수는 초깃값을 State 객체에 래핑된 매개변수로 수신한 다음, value의 값을 관찰 가능한 상태로 만든다
  */
 @Composable
-fun EditNumberField(modifier: Modifier = Modifier) {
-    var amountInput by remember { mutableStateOf("")}//청구 금액에 관한 앱의 상태
+fun EditNumberField(
+    value: String,//표시할 현재 값
+    onValueChange: (String) -> Unit,//사용자가 텍스트를 입력하는 경우 등 값이 변경될 때 상태가 업데이트될 수 있도록 트리거되는 콜백 람다
+    modifier: Modifier = Modifier) {
 
     TextField(//import androidx.compose.material3.TextField
-        value = amountInput,//여기에서 전달하는 문자열 값을 표시하는 텍스트 상자
-        onValueChange= { amountInput = it },//사용자가 상자에 텍스트를 입력할 때 트리거되는 람다 콜백
+        value = value,//여기에서 전달하는 문자열 값을 표시하는 텍스트 상자
+        onValueChange = onValueChange,//사용자가 상자에 텍스트를 입력할 때 트리거되는 람다 콜백
         label = { Text(stringResource(R.string.bill_amount)) },//텍스트 입력란에 라벨을 추가한다
         singleLine = true,//텍스트 상자가 여러 줄에서 가로로 스크롤 가능한 하나의 줄로 압축된다
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),//화면에 표시되는 키보드를 구성한다, 숫자 유형 키보드
