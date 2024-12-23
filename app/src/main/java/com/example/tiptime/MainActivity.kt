@@ -19,6 +19,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -36,6 +37,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
@@ -48,6 +50,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.focusModifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -99,6 +102,7 @@ fun TipTimeLayout() {
         )
         EditNumberField(
             label = R.string.bill_amount,//EditNumberField를 재사용하기 위해 label을 매개변수로 준다
+            leadingIcon = R.drawable.money,
             keyboardOptions = KeyboardOptions.Default.copy(
                 keyboardType = KeyboardType.Number,
                 imeAction = ImeAction.Next
@@ -111,6 +115,7 @@ fun TipTimeLayout() {
         )
         EditNumberField(
             label = R.string.how_was_the_service,
+            leadingIcon = R.drawable.percent,
             keyboardOptions = KeyboardOptions.Default.copy(
                 keyboardType = KeyboardType.Number,
                 imeAction = ImeAction.Done
@@ -162,14 +167,16 @@ private fun calculateTip(
  */
 @Composable
 fun EditNumberField(
-    @StringRes label: Int,//매개변수가 문자열 리소스 참조여아 함을 나타내기 위한 주석
+    @StringRes label: Int,//매개변수가 문자열 리소스 참조여야 함을 나타내기 위한 주석
+    @DrawableRes leadingIcon: Int,
     keyboardOptions: KeyboardOptions,
     value: String,//표시할 현재 값
     onValueChange: (String) -> Unit,//사용자가 텍스트를 입력하는 경우 등 값이 변경될 때 상태가 업데이트될 수 있도록 트리거되는 콜백 람다
     modifier: Modifier = Modifier) {
 
-    TextField(//import androidx.compose.material3.TextField
+    TextField(
         value = value,//여기에서 전달하는 문자열 값을 표시하는 텍스트 상자
+        leadingIcon = { Icon(painter = painterResource(id = leadingIcon), null) },
         onValueChange = onValueChange,//사용자가 상자에 텍스트를 입력할 때 트리거되는 람다 콜백
         label = { Text(stringResource(label)) },//텍스트 입력란에 라벨을 추가한다
         singleLine = true,//텍스트 상자가 여러 줄에서 가로로 스크롤 가능한 하나의 줄로 압축된다
