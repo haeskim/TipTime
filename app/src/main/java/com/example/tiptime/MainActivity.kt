@@ -149,11 +149,12 @@ private fun calculateTip(
     tipPercent: Double = 15.0,
     roundUp: Boolean
 ): String {
-    var tip = tipPercent / 100 * amount
+    var tip: Double = tipPercent / 100 * amount
     if (roundUp) {
         tip = kotlin.math.ceil(tip)//주어진 정숫값을 반올림한다(10.65 -> 11.00)
     }
-    return NumberFormat.getCurrencyInstance().format(tip)
+//    return NumberFormat.getCurrencyInstance().format(tip)//예시와 다르게 double형태가 아닌 int형태로 출력해 임의로 변경함
+    return tip.toString()
 }
 
 /**
@@ -200,8 +201,7 @@ fun RoundTheTipRow(
 ) {
     Row(
         modifier = modifier
-            .fillMaxWidth()
-            .size(48.dp),
+            .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
