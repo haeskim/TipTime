@@ -59,6 +59,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.tiptime.ui.theme.TipTimeTheme
 import java.text.NumberFormat
+import java.util.Locale
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -156,8 +157,8 @@ internal fun calculateTip(
     if (roundUp) {
         tip = kotlin.math.ceil(tip)//주어진 정숫값을 반올림한다(10.65 -> 11.00)
     }
-//    return NumberFormat.getCurrencyInstance().format(tip)//예시와 다르게 double형태가 아닌 int형태로 출력해 임의로 변경함
-    return tip.toString()
+    return NumberFormat.getCurrencyInstance(Locale.US).format(tip)
+    //예시와 다르게 double형태가 아닌 int형태로 출력되는 문제가 있어 수정함
 }
 
 /**
